@@ -72,6 +72,14 @@ function BigMeta.__div(b1, b2)
     return b1:div(b2)
 end
 
+function Big:negate()
+    return self:mul(Big:new(-1))
+end
+
+function BigMeta.__unm(b1)
+    return b1:negate()
+end
+
 function Big:log10()
     if self:lte(Big:new(0)) then return nil end
     return self.e + math.log(self.m, 10)
@@ -97,6 +105,10 @@ end
 
 function BigMeta.__pow(b1, n)
     return b1:pow(n)
+end
+
+function Big:recp()
+    return self:pow(-1)
 end
 
 function Big:sqrt()
