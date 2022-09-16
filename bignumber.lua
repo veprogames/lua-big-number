@@ -57,6 +57,7 @@ function Big:div(b)
 end
 
 function Big:log10()
+    if self:lte(Big:new(0)) then return nil end
     return self.e + math.log(self.m, 10)
 end
 
