@@ -148,8 +148,16 @@ function Big:lt(b)
     return self:compare(b) == -1
 end
 
+function BigMeta.__lt(b1, b2)
+    return b1:lt(b2)
+end
+
 function Big:lte(b)
     return self:compare(b) <= 0
+end
+
+function BigMeta.__le(b1, b2)
+    return b1:lte(b2)
 end
 
 function Big:gt(b)
@@ -160,12 +168,24 @@ function Big:eq(b)
     return self:compare(b) == 0
 end
 
+function BigMeta.__eq(b1, b2)
+    return b1:eq(b2)
+end
+
+function Big:neq(b)
+    return self:compare(b) ~= 0
+end
+
 function Big:to_string()
     return self.m.."e"..self.e
 end
 
 function Big:to_number()
     return self.m * 10 ^ self.e
+end
+
+function BigMeta.__tostring(b)
+    return b:to_string()
 end
 
 function Big.parse(str)
