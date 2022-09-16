@@ -8,6 +8,9 @@ Big = {
 BigMeta = {}
 BigMeta.__index = Big
 
+--- Create a new Big number
+--
+-- numbers are stored in the form `m * 10 ^ e`
 function Big:new(m, e)
     if e == nil then e = 0 end
 
