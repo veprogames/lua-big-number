@@ -86,6 +86,59 @@ function Big:cbrt()
     return self:pow(1 / 3)
 end
 
+function Big:is_positive()
+    return self.m >= 0
+end
+
+function Big:is_negative()
+    return self.m < 0
+end
+
+function Big:compare(b)
+    if self.m == b.m and self.e == b.e then
+        return 0
+    end
+
+    if self:is_positive() and b:is_negative() then
+        return 1
+    end
+    if self:is_negative() and b:is_positive() then
+        return -1
+    end
+
+    if self.e > b.e then return 1 end
+    if self.e < b.e then return -1 end
+
+    if self:is_positive() and self.m > b.m then return 1 end
+    if self:is_positive() and self.m < b.m then return -1 end
+    if self:is_negative() and self.m > b.m then return -1 end
+    if self:is_negative() and self.m < b.m then return 1 end
+end
+
+function Big:gt(b)
+    return self:compare(b) == 1
+end
+
+function Big:gte(b)
+    return self:compare(b) >= 0
+end
+
+function Big:lt(b)
+    return self:compare(b) == -1
+end
+
+function Big:lte(b)
+    return self:compare(b) <= 0
+end
+
+function Big:gt(b)
+    return self:compare(b) == 1
+end
+
+function Big:eq(b)
+    return self:compare(b) == 0
+end
+
 function Big:to_string()
     return self.m.."e"..self.e
 end
