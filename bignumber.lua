@@ -55,6 +55,38 @@ function Big:div(b)
     return result
 end
 
+function Big:log10()
+    return self.e + math.log(self.m, 10)
+end
+
+function Big:log(base)
+    return self:log10() / math.log(base, 10)
+end
+
+function Big:ln()
+    return self:log(math.exp(1))
+end
+
+function Big:ld()
+    return self:log(2)
+end
+
+function Big:pow(pow)
+    local log = self:log10()
+    local new_log = log * pow
+    local result = Big:new(10 ^ (new_log % 1), math.floor(new_log))
+    result:normalize()
+    return result
+end
+
+function Big:sqrt()
+    return self:pow(0.5)
+end
+
+function Big:cbrt()
+    return self:pow(1 / 3)
+end
+
 function Big:to_string()
     return self.m.."e"..self.e
 end
