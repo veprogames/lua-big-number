@@ -43,17 +43,33 @@ function Big:add(b)
     return Big:new(self.m + b.m * 10 ^ delta, self.e):normalized()
 end
 
+function BigMeta.__add(b1, b2)
+    return b1:add(b2)
+end
+
 function Big:sub(b)
     local nb = Big:new(b.m * -1, b.e) --negate b
     return self:add(nb)
+end
+
+function BigMeta.__sub(b1, b2)
+    return b1:sub(b2)
 end
 
 function Big:mul(b)
     return Big:new(self.m * b.m, self.e + b.e):normalized()
 end
 
+function BigMeta.__mul(b1, b2)
+    return b1:mul(b2)
+end
+
 function Big:div(b)
     return Big:new(self.m / b.m, self.e - b.e):normalized()
+end
+
+function BigMeta.__div(b1, b2)
+    return b1:div(b2)
 end
 
 function Big:log10()
@@ -77,6 +93,10 @@ function Big:pow(pow)
     local log = self:log10()
     local new_log = log * pow
     return Big:new(10 ^ (new_log % 1), math.floor(new_log)):normalized()
+end
+
+function BigMeta.__pow(b1, n)
+    return b1:pow(n)
 end
 
 function Big:sqrt()
