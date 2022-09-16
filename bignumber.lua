@@ -11,6 +11,10 @@ BigMeta.__index = Big
 function Big:new(m, e)
     if e == nil then e = 0 end
 
+    if type(m) == "string" then
+        return Big.parse(m)
+    end
+
     local inst = setmetatable({m = m, e = e}, BigMeta)
     inst:normalize()
     return inst
@@ -25,6 +29,11 @@ function Big:normalize()
         self.e = self.e + n_log
         self.e = math.floor(self.e)
     end
+end
+
+function Big:normalized()
+    self:normalize()
+    return self
 end
 
 function Big:add(b)
@@ -93,6 +102,18 @@ end
 
 function Big:to_number()
     return self.m * 10 ^ self.e
+end
+
+function Big.parse(str)
+    if tonumber(str) ~= nil then
+        return Big:new(tonumber(str)):normalized()
+    end
+
+    local parts = {}
+    for m, e in str:gmatch("(.+)e(.+)") do
+        parts = {m, e}
+    end
+    return Big:new(tonumber(parts[1]), math.floor(tonumber(parts[2]))):normalized()
 end
 
 return Big
