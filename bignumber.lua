@@ -91,4 +91,8 @@ function Big:to_string()
     return self.m.."e"..self.e
 end
 
+function Big:to_number()
+    return self.m * 10 ^ self.e
+end
+
 return Big
