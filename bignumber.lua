@@ -15,9 +15,7 @@ function Big:new(m, e)
         return Big.parse(m)
     end
 
-    local inst = setmetatable({m = m, e = e}, BigMeta)
-    inst:normalize()
-    return inst
+    return setmetatable({m = m, e = e}, BigMeta):normalized()
 end
 
 function Big:normalize()
@@ -42,9 +40,7 @@ function Big:add(b)
     if delta > 14 then return b end
     if delta < -14 then return self end
 
-    local result = Big:new(self.m + b.m * 10 ^ delta, self.e)
-    result:normalize()
-    return result
+    return Big:new(self.m + b.m * 10 ^ delta, self.e):normalized()
 end
 
 function Big:sub(b)
@@ -53,15 +49,11 @@ function Big:sub(b)
 end
 
 function Big:mul(b)
-    local result = Big:new(self.m * b.m, self.e + b.e)
-    result:normalize()
-    return result
+    return Big:new(self.m * b.m, self.e + b.e):normalized()
 end
 
 function Big:div(b)
-    local result = Big:new(self.m / b.m, self.e - b.e)
-    result:normalize()
-    return result
+    return Big:new(self.m / b.m, self.e - b.e):normalized()
 end
 
 function Big:log10()
@@ -83,9 +75,7 @@ end
 function Big:pow(pow)
     local log = self:log10()
     local new_log = log * pow
-    local result = Big:new(10 ^ (new_log % 1), math.floor(new_log))
-    result:normalize()
-    return result
+    return Big:new(10 ^ (new_log % 1), math.floor(new_log)):normalized()
 end
 
 function Big:sqrt()
