@@ -122,6 +122,31 @@ function Big:cbrt()
     return self:pow(1 / 3)
 end
 
+function Big:round()
+    local num = self:to_number()
+    if num % 1 < 0.5 then
+        return Big:new(math.floor(num))
+    else
+        return Big:new(math.ceil(num))
+    end
+end
+
+function Big:floor()
+    return Big:new(math.floor(self:to_number()))
+end
+
+function Big:ceil()
+    return Big:new(math.ceil(self:to_number()))
+end
+
+function Big:floor_m(digits)
+    return Big:new(math.floor(self.m * 10 ^ digits) / 10 ^ digits, self.e)
+end
+
+function Big:ceil_m(digits)
+    return Big:new(math.ceil(self.m * 10 ^ digits) / 10 ^ digits, self.e)
+end
+
 function Big:is_positive()
     return self.m >= 0
 end
