@@ -253,8 +253,9 @@ function BigMeta.__tostring(b)
 end
 
 function Big.parse(str)
-    if tonumber(str) ~= nil then
-        return Big:new(tonumber(str)):normalized()
+    local to_n = tonumber(str)
+    if to_n ~= nil and to_n < math.huge then
+        return Big:new(to_n):normalized()
     end
 
     local parts = {}
