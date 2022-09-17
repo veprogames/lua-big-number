@@ -110,6 +110,10 @@ function BigMeta.__pow(b1, n)
     return b1:pow(n)
 end
 
+function Big.exp(n)
+    return Big:new(math.exp(1)):pow(n)
+end
+
 function Big:recp()
     return self:pow(-1)
 end
