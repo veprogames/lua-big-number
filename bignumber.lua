@@ -147,6 +147,26 @@ function Big:ceil_m(digits)
     return Big:new(math.ceil(self.m * 10 ^ digits) / 10 ^ digits, self.e)
 end
 
+function Big:sin()
+    return Big:new(math.sin(self:to_number()))
+end
+
+function Big:asin()
+    return Big:new(math.asin(self:to_number()))
+end
+
+function Big:cos()
+    return Big:new(math.cos(self:to_number()))
+end
+
+function Big:acos()
+    return Big:new(math.acos(self:to_number()))
+end
+
+function Big:tan()
+    return Big:new(math.tan(self:to_number()))
+end
+
 function Big:is_positive()
     return self.m >= 0
 end
