@@ -1,24 +1,23 @@
 Notation = dofile("notations/notation.lua")
 
-BaseLetterNotation = {
-    letters = ""
-}
+BaseLetterNotation = {}
 BaseLetterNotation.__index = BaseLetterNotation
 BaseLetterNotation.__tostring = function (notation)
     return "BaseLetterNotation {"..notation.letters.."}"
 end
 setmetatable(BaseLetterNotation, Notation)
 
-function BaseLetterNotation:new(letters)
-    return setmetatable({letters = letters}, BaseLetterNotation)
+function BaseLetterNotation:new(letters, opt)
+    opt = opt or {}
+    return setmetatable({
+        name = "BaseLetterNotation",
+        letters = letters,
+        dynamic = opt.dynamic,
+        reversed = opt.reversed
+    }, BaseLetterNotation)
 end
 
-function BaseLetterNotation:get_number(n, places)
-    local num = n.m * 10 ^ (n.e % 3)
-    return Notation:format_mantissa(num, places)
-end
-
-function BaseLetterNotation:get_suffix(n)
+function BaseLetterNotation:get_letters(n)
     local order = math.floor(n.e / 3)
     local result = ""
     while order > 0 do
@@ -27,6 +26,19 @@ function BaseLetterNotation:get_suffix(n)
         order = math.floor(order / #self.letters)
     end
     return result
+end
+
+function BaseLetterNotation:get_number(n, places)
+    local num = n.m * 10 ^ (n.e % 3)
+    return Notation:format_mantissa(num, places)
+end
+
+function BaseLetterNotation:get_prefix(n)
+    if self.reversed then return self:get_letters(n) else return "" end
+end
+
+function BaseLetterNotation:get_suffix(n)
+    if not self.reversed then return self:get_letters(n) else return "" end
 end
 
 return BaseLetterNotation

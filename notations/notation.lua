@@ -4,8 +4,9 @@ Notation.__tostring = function ()
     return "Notation"
 end
 
-function Notation:new()
-    return setmetatable({}, Notation)
+function Notation:new(name, opt)
+    opt = opt or {}
+    return setmetatable({name = name, dynamic = opt.dynamic or false}, Notation)
 end
 
 function Notation:get_prefix(n)
@@ -25,6 +26,8 @@ function Notation:format(n, places, places1000)
     if n < Big:new(1000) then
         p = places1000 or 0
     end
+
+    if self.dynamic then p = p - (n.e % 3) else end
 
     return self:get_prefix(n) .. self:get_number(n, p) .. self:get_suffix(n)
 end
