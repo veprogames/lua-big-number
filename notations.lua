@@ -1,5 +1,5 @@
 Notations = {
-    Notation = dofile("notations/basenotation.lua"),
+    Notation = dofile("notations/notation.lua"),
     BaseLetterNotation = dofile("notations/baseletternotation.lua")
 }
 
