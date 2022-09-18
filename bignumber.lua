@@ -101,6 +101,10 @@ function Big:ld()
 end
 
 function Big:pow(pow)
+    -- faster than self:eq(Big:new(0))
+    if self.m == 0 and self.e == 0 then
+        return Big:new(0)
+    end
     local log = self:log10()
     local new_log = log * pow
     return Big:new(10 ^ (new_log % 1), math.floor(new_log)):normalized()
