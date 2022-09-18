@@ -1,4 +1,4 @@
-BaseNotation = dofile("notations/basenotation.lua")
+Notation = dofile("notations/basenotation.lua")
 
 BaseLetterNotation = {
     letters = ""
@@ -7,7 +7,7 @@ BaseLetterNotation.__index = BaseLetterNotation
 BaseLetterNotation.__tostring = function (notation)
     return "BaseLetterNotation {"..notation.letters.."}"
 end
-setmetatable(BaseLetterNotation, BaseNotation)
+setmetatable(BaseLetterNotation, Notation)
 
 function BaseLetterNotation:new(letters)
     return setmetatable({letters = letters}, BaseLetterNotation)

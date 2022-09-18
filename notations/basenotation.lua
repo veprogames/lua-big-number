@@ -1,27 +1,27 @@
-BaseNotation = {}
-BaseNotation.__index = BaseNotation
-BaseNotation.__tostring = function ()
+Notation = {}
+Notation.__index = Notation
+Notation.__tostring = function ()
     return "Notation"
 end
 
-function BaseNotation:new()
-    return setmetatable({}, BaseNotation)
+function Notation:new()
+    return setmetatable({}, Notation)
 end
 
-function BaseNotation:get_prefix(n)
+function Notation:get_prefix(n)
     return ""
 end
 
-function BaseNotation:get_number(n)
+function Notation:get_number(n)
     return ""
 end
 
-function BaseNotation:get_suffix(n)
+function Notation:get_suffix(n)
     return ""
 end
 
-function BaseNotation:format(n)
+function Notation:format(n)
     return self:get_prefix(n) .. self:get_number(n) .. self.get_suffix(n)
 end
 
-return BaseNotation
+return Notation
