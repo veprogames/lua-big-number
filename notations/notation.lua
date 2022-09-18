@@ -26,7 +26,7 @@ function Notation:format(n, places, places1000)
         p = places1000 or 0
     end
 
-    return self:get_prefix(n) .. self:get_number(n, p) .. self.get_suffix(n)
+    return self:get_prefix(n) .. self:get_number(n, p) .. self:get_suffix(n)
 end
 
 -- wrapper function to format numbers
