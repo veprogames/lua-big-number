@@ -3,6 +3,7 @@ BaseLetterNotation = dofile("notations/baseletternotation.lua")
 LetterNotation = {}
 LetterNotation.__index = LetterNotation
 setmetatable(LetterNotation, BaseLetterNotation)
+LetterNotation.__tostring = function () return "LetterNotation" end
 
 function LetterNotation:new(opt)
     opt = opt or {}
