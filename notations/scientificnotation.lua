@@ -8,9 +8,7 @@ end
 setmetatable(ScientificNotation, Notation)
 
 function ScientificNotation:new()
-    return setmetatable({
-        name = "ScientificNotation",
-    }, ScientificNotation)
+    return setmetatable({}, ScientificNotation)
 end
 
 function ScientificNotation:get_number(n, places)

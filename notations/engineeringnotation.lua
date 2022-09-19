@@ -10,7 +10,6 @@ setmetatable(EngineeringNotation, Notation)
 function EngineeringNotation:new(opt)
     opt = opt or {}
     return setmetatable({
-        name = "EngineeringNotation",
         dynamic = opt.dynamic or false
     }, EngineeringNotation)
 end

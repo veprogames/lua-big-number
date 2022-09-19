@@ -7,11 +7,10 @@ BaseLetterNotation.__tostring = function (notation)
 end
 setmetatable(BaseLetterNotation, Notation)
 
-function BaseLetterNotation:new(letters, opt)
+function BaseLetterNotation:new(opt)
     opt = opt or {}
     return setmetatable({
-        name = "BaseLetterNotation",
-        letters = letters,
+        letters = opt.letters,
         dynamic = opt.dynamic,
         reversed = opt.reversed
     }, BaseLetterNotation)

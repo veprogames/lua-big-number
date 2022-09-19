@@ -4,9 +4,9 @@ Notation.__tostring = function ()
     return "Notation"
 end
 
-function Notation:new(name, opt)
+function Notation:new(opt)
     opt = opt or {}
-    return setmetatable({name = name, dynamic = opt.dynamic or false}, Notation)
+    return setmetatable({dynamic = opt.dynamic or false}, Notation)
 end
 
 function Notation:get_prefix(n)
