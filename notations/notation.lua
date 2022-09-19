@@ -27,18 +27,18 @@ function Notation:format(n, places, places1000)
         p = places1000 or 0
     end
 
-    if self.dynamic then p = p + self:dp(n) else end
+    if self.dynamic then p = p + self.dp(n) else end
 
     return self:get_prefix(n) .. self:get_number(n, p) .. self:get_suffix(n)
 end
 
 -- get dynamic places, added to base precision
-function Notation:dp(n)
+function Notation.dp(n)
     return -(n.e % 3)
 end
 
 -- wrapper function to format numbers
-function Notation:format_mantissa(number, places)
+function Notation.format_mantissa(number, places)
     places = math.max(0, places)
     return string.format("%."..places.."f", number)
 end

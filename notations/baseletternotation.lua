@@ -29,7 +29,7 @@ end
 
 function BaseLetterNotation:get_number(n, places)
     local num = n.m * 10 ^ (n.e % 3)
-    return Notation:format_mantissa(num, places)
+    return Notation.format_mantissa(num, places)
 end
 
 function BaseLetterNotation:get_prefix(n)
