@@ -22,6 +22,10 @@ function Notation:get_suffix(n)
 end
 
 function Notation:format(n, places, places1000)
+    if n:is_negative() then
+        return "-" .. self:format(n:negate(), places, places1000)
+    end
+
     local p = places or 0
     if n < Big:new(1000) then
         p = places1000 or 0
