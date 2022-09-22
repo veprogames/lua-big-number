@@ -6,6 +6,7 @@ Notations = {
     HebrewNotation = dofile("notations/hebrewnotation.lua"),
     ScientificNotation = dofile("notations/scientificnotation.lua"),
     EngineeringNotation = dofile("notations/engineeringnotation.lua"),
+    ThousandNotation = dofile("notations/thousandnotation.lua"),
     DynamicNotation = dofile("notations/dynamicnotation.lua")
 }
 
