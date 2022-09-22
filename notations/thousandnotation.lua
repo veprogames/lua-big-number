@@ -24,7 +24,7 @@ function ThousandNotation:get_number(n, places)
 
     for i = 1, #raw do
         result = result .. string.sub(raw, i, i)
-        if (comma - i) % 3 == 0 and i > 1 and i < comma then
+        if (comma - i) % 3 == 0 and i < comma then
             result = result .. ","
         end
     end
