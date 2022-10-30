@@ -12,7 +12,7 @@ function ScientificNotation:new()
 end
 
 function ScientificNotation:get_number(n, places)
-    return self:format_mantissa(n.m, places)
+    return self.format_mantissa(n.m, places)
 end
 
 function ScientificNotation:get_suffix(n)

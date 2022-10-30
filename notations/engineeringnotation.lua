@@ -16,7 +16,7 @@ end
 
 function EngineeringNotation:get_number(n, places)
     local mantissa = n.m * 10 ^ (n.e % 3)
-    return self:format_mantissa(mantissa, places)
+    return self.format_mantissa(mantissa, places)
 end
 
 function EngineeringNotation:get_suffix(n)
