@@ -1,21 +1,24 @@
 BaseLetterNotation = dofile("notations/baseletternotation.lua")
 
----@class HebrewNotation: Notation
-HebrewNotation = {}
-HebrewNotation.__index = LetterNotation
-setmetatable(HebrewNotation, BaseLetterNotation)
-HebrewNotation.__tostring = function () return "HebrewNotation" end
+---@class HebrewNotation: BaseLetterNotation
+HebrewNotation = BaseLetterNotation:new()
 
 
----@param opt { dynamic: boolean, reversed: boolean }
+---@param opt? { dynamic: boolean, reversed: boolean }
 ---@return HebrewNotation
-function HebrewNotation.new(opt)
+function HebrewNotation:new(opt)
+    self.__index = self
     opt = opt or {}
     return setmetatable({
         letters = "~אבּבגּגדּדהוזחטיכּכךּךלמםנןסעפּפףּףצץקרשׁשׂתּת",
         dynamic = opt.dynamic or false,
         reversed = opt.reversed or false
-    }, HebrewNotation)
+    }, self)
+end
+
+
+function HebrewNotation.__tostring()
+    return "HebrewNotation"
 end
 
 

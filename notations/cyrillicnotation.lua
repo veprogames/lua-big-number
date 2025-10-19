@@ -1,21 +1,19 @@
 BaseLetterNotation = dofile("notations/baseletternotation.lua")
 
 ---@class CyrillicNotation: BaseLetterNotation
-CyrillicNotation = {}
-CyrillicNotation.__index = LetterNotation
-setmetatable(CyrillicNotation, BaseLetterNotation)
-CyrillicNotation.__tostring = function () return "CyrillicNotation" end
+CyrillicNotation = BaseLetterNotation:new()
 
 
----@param opt { dynamic: boolean, reversed: boolean }
+---@param opt? { dynamic: boolean, reversed: boolean }
 ---@return CyrillicNotation
-function CyrillicNotation.new(opt)
+function CyrillicNotation:new(opt)
+    self.__index = self
     opt = opt or {}
     return setmetatable({
         letters = "~абвгдежзиклмнопстуфхцчшщэюяАБВГДЕЖЗИКЛМНОПСТУФХЦЧШЩЭЮЯ",
         dynamic = opt.dynamic or false,
         reversed = opt.reversed or false
-    }, CyrillicNotation)
+    }, self)
 end
 
 

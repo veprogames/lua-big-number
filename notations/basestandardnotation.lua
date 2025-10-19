@@ -6,12 +6,8 @@ Notation = dofile("notations/notation.lua")
 ---@field tens string[]
 ---@field hundreds string[]
 ---@field reversed boolean
-BaseStandardNotation = {}
-BaseStandardNotation.__index = BaseStandardNotation
-BaseStandardNotation.__tostring = function (notation)
-    return "BaseStandardNotation"
-end
-setmetatable(BaseStandardNotation, Notation)
+BaseStandardNotation = Notation:new()
+
 
 ---@class BaseStandardNotationOpts
 ---@field start string[]
@@ -21,9 +17,11 @@ setmetatable(BaseStandardNotation, Notation)
 ---@field dynamic boolean
 ---@field reversed boolean
 
----@param opt BaseStandardNotationOpts
+
+---@param opt? BaseStandardNotationOpts
 ---@return BaseStandardNotation
-function BaseStandardNotation.new(opt)
+function BaseStandardNotation:new(opt)
+    self.__index = self
     opt = opt or {}
     return setmetatable({
         start = opt.start,
@@ -32,7 +30,7 @@ function BaseStandardNotation.new(opt)
         hundreds = opt.hundreds,
         dynamic = opt.dynamic,
         reversed = opt.reversed
-    }, BaseStandardNotation)
+    }, self)
 end
 
 
@@ -80,6 +78,11 @@ end
 ---@return string
 function BaseStandardNotation:get_suffix(n)
     if not self.reversed then return self:get_number_name(n.e) else return "" end
+end
+
+
+function BaseStandardNotation.__tostring()
+    return "BaseStandardNotation"
 end
 
 

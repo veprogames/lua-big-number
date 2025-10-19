@@ -1,18 +1,12 @@
 BaseStandardNotation = dofile("notations/basestandardnotation.lua")
 
-
 ---@class StandardNotation: BaseStandardNotation
-StandardNotation = {}
-StandardNotation.__index = StandardNotation
-StandardNotation.__tostring = function (notation)
-    return "StandardNotation"
-end
-setmetatable(StandardNotation, BaseStandardNotation)
+StandardNotation = BaseStandardNotation:new()
 
-
----@param opt BaseStandardNotationOpts
+---@param opt? BaseStandardNotationOpts
 ---@return StandardNotation
-function StandardNotation.new(opt)
+function StandardNotation:new(opt)
+    self.__index = self
     opt = opt or {}
     return setmetatable({
         start = {"", "K", "M", "B", "T"},
@@ -21,7 +15,7 @@ function StandardNotation.new(opt)
         hundreds = {"", "C", "DC", "TC", "QaC", "QiC", "SxC", "SpC", "OC", "NoC"},
         dynamic = opt.dynamic,
         reversed = opt.reversed
-    }, StandardNotation)
+    }, self)
 end
 
 

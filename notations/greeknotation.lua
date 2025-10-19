@@ -1,21 +1,24 @@
 BaseLetterNotation = dofile("notations/baseletternotation.lua")
 
 ---@class GreekNotation: BaseLetterNotation
-GreekNotation = {}
-GreekNotation.__index = LetterNotation
-setmetatable(GreekNotation, BaseLetterNotation)
-GreekNotation.__tostring = function () return "GreekNotation" end
+GreekNotation = BaseLetterNotation:new()
 
 
 ---@param opt { dynamic: boolean, reversed: boolean }
 ---@return GreekNotation
-function GreekNotation.new(opt)
+function GreekNotation:new(opt)
+    self.__index = self
     opt = opt or {}
     return setmetatable({
         letters = "~αβγδεζηθικλμνξοπρστυφχψωΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ",
         dynamic = opt.dynamic or false,
         reversed = opt.reversed or false
-    }, GreekNotation)
+    }, self)
+end
+
+
+function GreekNotation.__tostring()
+    return "GreekNotation"
 end
 
 

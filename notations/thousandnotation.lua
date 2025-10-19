@@ -2,18 +2,13 @@ Notation = dofile("notations/notation.lua")
 
 ---@class ThousandNotation: Notation
 ThousandNotation = {}
-ThousandNotation.__index = ThousandNotation
-ThousandNotation.__tostring = function ()
-    return "ThousandNotation"
-end
-setmetatable(ThousandNotation, Notation)
 
 
 ---@return ThousandNotation
-function ThousandNotation.new()
-    return setmetatable({}, ThousandNotation)
+function ThousandNotation:new()
+    self.__index = self
+    return setmetatable({}, self)
 end
-
 
 
 ---@param n Big
@@ -37,6 +32,11 @@ function ThousandNotation:get_number(n, places)
         end
     end
     return result
+end
+
+
+function ThousandNotation.__tostring()
+    return "ThousandNotation"
 end
 
 

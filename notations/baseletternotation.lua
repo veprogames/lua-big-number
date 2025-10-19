@@ -3,22 +3,18 @@ Notation = dofile("notations/notation.lua")
 ---@class BaseLetterNotation: Notation
 ---@field letters string
 ---@field reversed boolean
-BaseLetterNotation = {}
-BaseLetterNotation.__index = BaseLetterNotation
-BaseLetterNotation.__tostring = function (notation)
-    return "BaseLetterNotation {"..notation.letters.."}"
-end
-setmetatable(BaseLetterNotation, Notation)
+BaseLetterNotation = Notation:new()
 
-
----@param opt { letters: string, dynamic: boolean, reversed: boolean }
-function BaseLetterNotation.new(opt)
+---@param opt? { letters: string, dynamic: boolean, reversed: boolean }
+---@return BaseLetterNotation
+function BaseLetterNotation:new(opt)
+    self.__index = self
     opt = opt or {}
     return setmetatable({
-        letters = opt.letters,
-        dynamic = opt.dynamic,
-        reversed = opt.reversed
-    }, BaseLetterNotation)
+        letters = opt.letters or "",
+        dynamic = opt.dynamic or false,
+        reversed = opt.reversed or false,
+    }, self)
 end
 
 
@@ -57,6 +53,11 @@ end
 ---@return string
 function BaseLetterNotation:get_suffix(n)
     if not self.reversed then return self:get_letters(n) else return "" end
+end
+
+
+function BaseLetterNotation:__tostring()
+    return "BaseLetterNotation {"..self.letters.."}"
 end
 
 

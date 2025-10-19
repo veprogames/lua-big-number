@@ -19,7 +19,19 @@ Big = {
 ---@param m number
 ---@param e number?
 ---@return Big
-function Big.new(m, e)
+function Big:new(m, e)
+    self.__index = self
+    self.__add = Big.add
+    self.__sub = Big.sub
+    self.__mul = Big.mul
+    self.__div = Big.div
+    self.__pow = Big.pow
+    self.__unm = Big.negate
+    self.__le = Big.lte
+    self.__lt = Big.lt
+    self.__eq = Big.eq
+    self.__tostring = Big.to_string
+
     if e == nil then e = 0 end
 
     if type(m) == "string" then
@@ -30,18 +42,7 @@ function Big.new(m, e)
         return parsed
     end
 
-    return setmetatable({m = m, e = e}, {
-        __add = Big.add,
-        __sub = Big.sub,
-        __mul = Big.mul,
-        __div = Big.div,
-        __pow = Big.pow,
-        __unm = Big.negate,
-        __le = Big.lte,
-        __lt = Big.lt,
-        __eq = Big.eq,
-        __tostring = Big.to_string,
-    }):normalized()
+    return setmetatable({m = m, e = e}, self):normalized()
 end
 
 
@@ -73,14 +74,14 @@ function Big:add(b)
     if delta > 14 then return b end
     if delta < -14 then return self end
 
-    return Big.new(self.m + b.m * 10 ^ delta, self.e):normalized()
+    return Big:new(self.m + b.m * 10 ^ delta, self.e):normalized()
 end
 
 
 ---@param b Big
 ---@return Big
 function Big:sub(b)
-    local nb = Big.new(b.m * -1, b.e) --negate b
+    local nb = Big:new(b.m * -1, b.e) --negate b
     return self:add(nb)
 end
 
@@ -88,26 +89,26 @@ end
 ---@param b Big
 ---@return Big
 function Big:mul(b)
-    return Big.new(self.m * b.m, self.e + b.e):normalized()
+    return Big:new(self.m * b.m, self.e + b.e):normalized()
 end
 
 
 ---@param b Big
 ---@return Big
 function Big:div(b)
-    return Big.new(self.m / b.m, self.e - b.e):normalized()
+    return Big:new(self.m / b.m, self.e - b.e):normalized()
 end
 
 
 ---@return Big
 function Big:negate()
-    return self:mul(Big.new(-1))
+    return self:mul(Big:new(-1))
 end
 
 
 ---@return number?
 function Big:log10()
-    if self:lte(Big.new(0)) then return nil end
+    if self:lte(Big:new(0)) then return nil end
     return self.e + math.log(self.m, 10)
 end
 
@@ -133,20 +134,20 @@ end
 ---@param pow number
 ---@return Big
 function Big:pow(pow)
-    -- faster than self:eq(Big.new(0))
+    -- faster than self:eq(Big:new(0))
     if self.m == 0 and self.e == 0 then
-        return Big.new(0)
+        return Big:new(0)
     end
     local log = self:log10()
     local new_log = log * pow
-    return Big.new(10 ^ (new_log % 1), math.floor(new_log)):normalized()
+    return Big:new(10 ^ (new_log % 1), math.floor(new_log)):normalized()
 end
 
 
 ---@param n number
 ---@return Big
 function Big.exp(n)
-    return Big.new(math.exp(1)):pow(n)
+    return Big:new(math.exp(1)):pow(n)
 end
 
 
@@ -172,66 +173,66 @@ end
 function Big:round()
     local num = self:to_number()
     if num % 1 < 0.5 then
-        return Big.new(math.floor(num))
+        return Big:new(math.floor(num))
     else
-        return Big.new(math.ceil(num))
+        return Big:new(math.ceil(num))
     end
 end
 
 
 ---@return Big
 function Big:floor()
-    return Big.new(math.floor(self:to_number()))
+    return Big:new(math.floor(self:to_number()))
 end
 
 
 ---@return Big
 function Big:ceil()
-    return Big.new(math.ceil(self:to_number()))
+    return Big:new(math.ceil(self:to_number()))
 end
 
 
 ---@param digits number
 ---@return Big
 function Big:floor_m(digits)
-    return Big.new(math.floor(self.m * 10 ^ digits) / 10 ^ digits, self.e)
+    return Big:new(math.floor(self.m * 10 ^ digits) / 10 ^ digits, self.e)
 end
 
 
 ---@param digits number
 ---@return Big
 function Big:ceil_m(digits)
-    return Big.new(math.ceil(self.m * 10 ^ digits) / 10 ^ digits, self.e)
+    return Big:new(math.ceil(self.m * 10 ^ digits) / 10 ^ digits, self.e)
 end
 
 
 ---@return Big
 function Big:sin()
-    return Big.new(math.sin(self:to_number()))
+    return Big:new(math.sin(self:to_number()))
 end
 
 
 ---@return Big
 function Big:asin()
-    return Big.new(math.asin(self:to_number()))
+    return Big:new(math.asin(self:to_number()))
 end
 
 
 ---@return Big
 function Big:cos()
-    return Big.new(math.cos(self:to_number()))
+    return Big:new(math.cos(self:to_number()))
 end
 
 
 ---@return Big
 function Big:acos()
-    return Big.new(math.acos(self:to_number()))
+    return Big:new(math.acos(self:to_number()))
 end
 
 
 ---@return Big
 function Big:tan()
-    return Big.new(math.tan(self:to_number()))
+    return Big:new(math.tan(self:to_number()))
 end
 
 
@@ -340,7 +341,7 @@ end
 function Big.parse(str)
     local to_n = tonumber(str)
     if to_n ~= nil and to_n < math.huge then
-        return Big.new(to_n):normalized()
+        return Big:new(to_n):normalized()
     end
 
     local parts = {}
@@ -358,7 +359,7 @@ function Big.parse(str)
         return nil
     end
 
-    return Big.new(mantissa, math.floor(exponent)):normalized()
+    return Big:new(mantissa, math.floor(exponent)):normalized()
 end
 
 

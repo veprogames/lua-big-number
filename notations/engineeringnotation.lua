@@ -2,19 +2,15 @@ Notation = dofile("notations/notation.lua")
 
 ---@class EngineeringNotation: Notation
 EngineeringNotation = {}
-EngineeringNotation.__index = EngineeringNotation
-EngineeringNotation.__tostring = function ()
-    return "EngineeringNotation"
-end
-setmetatable(EngineeringNotation, Notation)
 
 
----@param opt { dynamic: boolean }
-function EngineeringNotation.new(opt)
+---@param opt? { dynamic: boolean }
+function EngineeringNotation:new(opt)
+    self.__index = self
     opt = opt or {}
     return setmetatable({
         dynamic = opt.dynamic or false
-    }, EngineeringNotation)
+    }, self)
 end
 
 
@@ -31,6 +27,11 @@ end
 ---@return string
 function EngineeringNotation:get_suffix(n)
     return "e" .. 3 * math.floor(n.e / 3)
+end
+
+
+function EngineeringNotation.__tostring()
+    return "EngineeringNotation"
 end
 
 

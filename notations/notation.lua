@@ -1,21 +1,22 @@
 ---@class Notation
 ---@field dynamic boolean
 Notation = {}
-Notation.__index = Notation
-Notation.__tostring = function ()
-    return "Notation"
-end
 
----@param opt { dynamic: boolean }
+
+---@param opt? { dynamic: boolean }
 ---@return Notation
-function Notation.new(opt)
+function Notation:new(opt)
+    self.__index = self
     opt = opt or {}
-    return setmetatable({dynamic = opt.dynamic or false}, Notation)
+    return setmetatable({
+        dynamic = opt.dynamic or false
+    }, self)
 end
 
 
 ---@param n Big
 ---@return string
+---@diagnostic disable-next-line: unused-local
 function Notation:get_prefix(n)
     return ""
 end
@@ -24,6 +25,7 @@ end
 ---@param n Big
 ---@param places number
 ---@return string
+---@diagnostic disable-next-line: unused-local
 function Notation:get_number(n, places)
     return ""
 end
@@ -31,6 +33,7 @@ end
 
 ---@param n Big
 ---@return string
+---@diagnostic disable-next-line: unused-local
 function Notation:get_suffix(n)
     return ""
 end
@@ -46,7 +49,7 @@ function Notation:format(n, places, places1000)
     end
 
     local p = places or 0
-    if n < Big.new(1000) then
+    if n < Big:new(1000) then
         p = places1000 or 0
     end
 
@@ -56,7 +59,7 @@ function Notation:format(n, places, places1000)
 end
 
 ---get dynamic places, added to base precision
----@oaram n number
+---@param n Big
 ---@return number
 function Notation.dp(n)
     return -(n.e % 3)

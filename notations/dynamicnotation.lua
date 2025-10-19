@@ -7,20 +7,17 @@ ThousandNotation = dofile("notations/thousandnotation.lua")
 ---@field big Notation
 ---@field limit Big
 DynamicNotation = {}
-DynamicNotation.__index = DynamicNotation
-DynamicNotation.__tostring = function ()
-    return "DynamicNotation"
-end
 
 
 ---@param opt { small: Notation, big: Notation, limit: Big }
 ---@return DynamicNotation
-function DynamicNotation.new(opt)
+function DynamicNotation:new(opt)
+    self.__index = self
     return setmetatable({
         small = opt.small or ThousandNotation.new(),
         big = opt.big,
         limit = opt.limit
-    }, DynamicNotation)
+    }, self)
 end
 
 
@@ -68,6 +65,11 @@ function DynamicNotation:format(n, places_big, places_small)
     end
 
     return self:get_prefix(n) .. self:get_number(n, p) .. self:get_suffix(n)
+end
+
+
+function DynamicNotation.__tostring()
+    return "DynamicNotation"
 end
 
 

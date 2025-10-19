@@ -1,17 +1,14 @@
 Notation = dofile("notations/notation.lua")
 
 ---@class ScientificNotation: Notation
-ScientificNotation = {}
-ScientificNotation.__index = ScientificNotation
-ScientificNotation.__tostring = function ()
-    return "ScientificNotation"
-end
+ScientificNotation = Notation:new()
 setmetatable(ScientificNotation, Notation)
 
 
 ---@return ScientificNotation
-function ScientificNotation.new()
-    return setmetatable({}, ScientificNotation)
+function ScientificNotation:new()
+    self.__index = self
+    return setmetatable({}, self)
 end
 
 
@@ -27,6 +24,11 @@ end
 ---@return string
 function ScientificNotation:get_suffix(n)
     return "e" .. n.e
+end
+
+
+function ScientificNotation.__tostring()
+    return "ScientificNotation"
 end
 
 

@@ -1,21 +1,19 @@
 BaseLetterNotation = dofile("notations/baseletternotation.lua")
 
 ---@class LetterNotation: BaseLetterNotation
-LetterNotation = {}
-LetterNotation.__index = LetterNotation
-setmetatable(LetterNotation, BaseLetterNotation)
-LetterNotation.__tostring = function () return "LetterNotation" end
+LetterNotation = BaseLetterNotation:new()
 
 
 ---@param opt { dynamic: boolean, reversed: boolean }
 ---@return LetterNotation
-function LetterNotation.new(opt)
+function LetterNotation:new(opt)
+    self.__index = self
     opt = opt or {}
     return setmetatable({
         letters = "~abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
         dynamic = opt.dynamic or false,
         reversed = opt.reversed or false
-    }, LetterNotation)
+    }, self)
 end
 
 return LetterNotation
