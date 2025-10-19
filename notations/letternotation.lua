@@ -1,11 +1,15 @@
 BaseLetterNotation = dofile("notations/baseletternotation.lua")
 
+---@class LetterNotation: BaseLetterNotation
 LetterNotation = {}
 LetterNotation.__index = LetterNotation
 setmetatable(LetterNotation, BaseLetterNotation)
 LetterNotation.__tostring = function () return "LetterNotation" end
 
-function LetterNotation:new(opt)
+
+---@param opt { dynamic: boolean, reversed: boolean }
+---@return LetterNotation
+function LetterNotation.new(opt)
     opt = opt or {}
     return setmetatable({
         letters = "~abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",

@@ -1,5 +1,11 @@
 Notation = dofile("notations/notation.lua")
 
+---@class BaseStandardNotation: Notation
+---@field start string[]
+---@field ones string[]
+---@field tens string[]
+---@field hundreds string[]
+---@field reversed boolean
 BaseStandardNotation = {}
 BaseStandardNotation.__index = BaseStandardNotation
 BaseStandardNotation.__tostring = function (notation)
@@ -7,7 +13,17 @@ BaseStandardNotation.__tostring = function (notation)
 end
 setmetatable(BaseStandardNotation, Notation)
 
-function BaseStandardNotation:new(opt)
+---@class BaseStandardNotationOpts
+---@field start string[]
+---@field ones string[]
+---@field tens string[]
+---@field hundreds string[]
+---@field dynamic boolean
+---@field reversed boolean
+
+---@param opt BaseStandardNotationOpts
+---@return BaseStandardNotation
+function BaseStandardNotation.new(opt)
     opt = opt or {}
     return setmetatable({
         start = opt.start,
@@ -19,6 +35,9 @@ function BaseStandardNotation:new(opt)
     }, BaseStandardNotation)
 end
 
+
+---@param e number
+---@return string
 function BaseStandardNotation:get_number_name(e)
     if e >= 3003 then
         local order_m = math.floor(e / 3000)
@@ -40,17 +59,28 @@ function BaseStandardNotation:get_number_name(e)
         self.tens[1 + order_ten % #self.tens]
 end
 
+
+---@param n Big
+---@param places number
+---@return string
 function BaseStandardNotation:get_number(n, places)
     local num = n.m * 10 ^ (n.e % 3)
     return Notation.format_mantissa(num, places)
 end
 
+
+---@param n Big
+---@return string
 function BaseStandardNotation:get_prefix(n)
     if self.reversed then return self:get_number_name(n.e) else return "" end
 end
 
+
+---@param n Big
+---@return string
 function BaseStandardNotation:get_suffix(n)
     if not self.reversed then return self:get_number_name(n.e) else return "" end
 end
+
 
 return BaseStandardNotation
