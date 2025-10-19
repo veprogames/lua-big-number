@@ -28,7 +28,11 @@ function Big.new(m, e)
     if e == nil then e = 0 end
 
     if type(m) == "string" then
-        return Big.parse(m)
+        local parsed = Big.parse(m)
+        if parsed == nil then
+            error(string.format("%s is not a valid Big number", m))
+        end
+        return parsed
     end
 
     return setmetatable({m = m, e = e}, BigMeta):normalized()
@@ -390,6 +394,7 @@ end
 
 
 ---@param str string
+---@return Big?
 function Big.parse(str)
     local to_n = tonumber(str)
     if to_n ~= nil and to_n < math.huge then
@@ -399,8 +404,19 @@ function Big.parse(str)
     local parts = {}
     for m, e in str:gmatch("(.+)e(.+)") do
         parts = {m, e}
+        break
     end
-    return Big.new(tonumber(parts[1]), math.floor(tonumber(parts[2]))):normalized()
+
+    if #parts ~= 2 then return nil end
+
+    local mantissa = tonumber(parts[1])
+    local exponent = tonumber(parts[2])
+
+    if mantissa == nil or exponent == nil then
+        return nil
+    end
+
+    return Big.new(mantissa, math.floor(exponent)):normalized()
 end
 
 
