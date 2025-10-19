@@ -77,7 +77,7 @@ end
 ---@param n Big
 ---@return string
 function BaseStandardNotation:get_suffix(n)
-    if not self.reversed then return self:get_number_name(n.e) else return "" end
+    if not self.reversed then return " " .. self:get_number_name(n.e) else return "" end
 end
 
 
