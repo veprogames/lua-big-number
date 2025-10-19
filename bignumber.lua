@@ -13,11 +13,6 @@ Big = {
 }
 
 
--- metatable
-BigMeta = {}
-BigMeta.__index = Big
-
-
 ---Create a new Big number
 ---
 ---numbers are stored in the form `m * 10 ^ e`
@@ -35,7 +30,18 @@ function Big.new(m, e)
         return parsed
     end
 
-    return setmetatable({m = m, e = e}, BigMeta):normalized()
+    return setmetatable({m = m, e = e}, {
+        __add = Big.add,
+        __sub = Big.sub,
+        __mul = Big.mul,
+        __div = Big.div,
+        __pow = Big.pow,
+        __unm = Big.negate,
+        __le = Big.lte,
+        __lt = Big.lt,
+        __eq = Big.eq,
+        __tostring = Big.to_string,
+    }):normalized()
 end
 
 
@@ -71,21 +77,11 @@ function Big:add(b)
 end
 
 
-function BigMeta.__add(b1, b2)
-    return b1:add(b2)
-end
-
-
 ---@param b Big
 ---@return Big
 function Big:sub(b)
     local nb = Big.new(b.m * -1, b.e) --negate b
     return self:add(nb)
-end
-
-
-function BigMeta.__sub(b1, b2)
-    return b1:sub(b2)
 end
 
 
@@ -96,11 +92,6 @@ function Big:mul(b)
 end
 
 
-function BigMeta.__mul(b1, b2)
-    return b1:mul(b2)
-end
-
-
 ---@param b Big
 ---@return Big
 function Big:div(b)
@@ -108,19 +99,9 @@ function Big:div(b)
 end
 
 
-function BigMeta.__div(b1, b2)
-    return b1:div(b2)
-end
-
-
 ---@return Big
 function Big:negate()
     return self:mul(Big.new(-1))
-end
-
-
-function BigMeta.__unm(b1)
-    return b1:negate()
 end
 
 
@@ -159,11 +140,6 @@ function Big:pow(pow)
     local log = self:log10()
     local new_log = log * pow
     return Big.new(10 ^ (new_log % 1), math.floor(new_log)):normalized()
-end
-
-
-function BigMeta.__pow(b1, n)
-    return b1:pow(n)
 end
 
 
@@ -319,26 +295,10 @@ function Big:gte(b)
 end
 
 
----@param b1 Big
----@param b2 Big
----@return boolean
-function Big:__ge(b1, b2)
-    return b1:gte(b2)
-end
-
-
 ---@param b Big
 ---@return boolean
 function Big:lt(b)
     return self:compare(b) == -1
-end
-
-
----@param b1 Big
----@param b2 Big
----@return boolean
-function BigMeta.__lt(b1, b2)
-    return b1:lt(b2)
 end
 
 
@@ -349,23 +309,10 @@ function Big:lte(b)
 end
 
 
----@param b1 Big
----@param b2 Big
----@return boolean
-function BigMeta.__le(b1, b2)
-    return b1:lte(b2)
-end
-
-
 ---@param b Big
 ---@return boolean
 function Big:eq(b)
     return self:compare(b) == 0
-end
-
-
-function BigMeta.__eq(b1, b2)
-    return b1:eq(b2)
 end
 
 
@@ -385,11 +332,6 @@ end
 ---@return number
 function Big:to_number()
     return self.m * 10 ^ self.e
-end
-
-
-function BigMeta.__tostring(b)
-    return b:to_string()
 end
 
 
