@@ -1,4 +1,4 @@
-BaseLetterNotation = dofile("notations/baseletternotation.lua")
+BaseLetterNotation = require "notations.baseletternotation"
 
 ---@class CyrillicNotation: BaseLetterNotation
 CyrillicNotation = BaseLetterNotation:new()

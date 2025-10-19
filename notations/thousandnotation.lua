@@ -1,4 +1,4 @@
-Notation = dofile("notations/notation.lua")
+Notation = require "notations.notation"
 
 ---@class ThousandNotation: Notation
 ThousandNotation = {}

@@ -1,4 +1,4 @@
-BaseStandardNotation = dofile("notations/basestandardnotation.lua")
+BaseStandardNotation = require "notations.basestandardnotation"
 
 ---@class StandardNotation: BaseStandardNotation
 StandardNotation = BaseStandardNotation:new()

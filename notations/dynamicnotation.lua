@@ -1,5 +1,5 @@
-Notation = dofile("notations/notation.lua")
-ThousandNotation = dofile("notations/thousandnotation.lua")
+Notation = require "notations.notation"
+ThousandNotation = require "notations.thousandnotation"
 
 
 ---@class DynamicNotation
@@ -14,7 +14,7 @@ DynamicNotation = {}
 function DynamicNotation:new(opt)
     self.__index = self
     return setmetatable({
-        small = opt.small or ThousandNotation.new(),
+        small = opt.small or ThousandNotation:new(),
         big = opt.big,
         limit = opt.limit
     }, self)
