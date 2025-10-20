@@ -2,6 +2,7 @@ Notations = { Components = {} }
 
 ---@class SequenceParams
 ---@field sequence string|string[]
+---@field order "ascending"|"descending"?
 
 
 ---@param nth number
@@ -9,14 +10,27 @@ Notations = { Components = {} }
 ---@return string
 function Notations.Components.SequenceByNth(nth, params)
     local sequence = params.sequence
+    local order = params.order or "descending"
+
     local result = ""
     while nth > 0 do
-        local letter_index = 1 + nth % #sequence
+        local str_index = 1 + nth % #sequence
+
+        local str
         if type(sequence) == "table" then
-            result = sequence[letter_index] .. result
+            str = sequence[str_index]
         else
-            result = sequence:sub(letter_index, letter_index)
+            str = sequence:sub(str_index, str_index)
         end
+
+        if order == "descending" then
+            result = str .. result
+        elseif order == "ascending" then
+            result = result .. str
+        else
+            error(order .. " is an invalid order!")
+        end
+
         nth = math.floor(nth / #sequence)
     end
     return result
