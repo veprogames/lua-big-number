@@ -1,21 +1,34 @@
-Notations = {}
+Notations = { Components = {} }
 
----@class LetterParams
----@field letters string
+---@class SequenceParams
+---@field sequence string|string[]
 
----@param n Big
----@param params LetterParams
+
+---@param nth number
+---@param params SequenceParams
 ---@return string
-function Notations.Letters(n, params)
-    local letters = params.letters
-    local order = math.floor(n.e / 3)
+function Notations.Components.SequenceByNth(nth, params)
+    local sequence = params.sequence
     local result = ""
-    while order > 0 do
-        local letter_index = 1 + order % #letters
-        result = letters:sub(letter_index, letter_index) .. result
-        order = math.floor(order / #letters)
+    while nth > 0 do
+        local letter_index = 1 + nth % #sequence
+        if type(sequence) == "table" then
+            result = sequence[letter_index] .. result
+        else
+            result = sequence:sub(letter_index, letter_index)
+        end
+        nth = math.floor(nth / #sequence)
     end
     return result
+end
+
+
+---@param n Big
+---@param params SequenceParams
+---@return string
+function Notations.Components.Sequence(n, params)
+    local nth = math.floor(n.e / 3)
+    return Notations.Components.SequenceByNth(nth, params)
 end
 
 
@@ -27,7 +40,7 @@ end
 ---@param n Big
 ---@param params? MantissaParams
 ---@return string
-function Notations.Mantissa(n, params)
+function Notations.Components.Mantissa(n, params)
     params = params or {}
     local base_e = params.base_e or 3.0
     local precision = params.precision or 0
@@ -43,7 +56,7 @@ end
 
 ---@param n Big
 ---@return string
-function Notations.StandardSuffix(n)
+function Notations.Components.StandardSuffix(n)
     local start = {"", "K", "M", "B", "T"}
     local ones = {"", "U", "D", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No"}
     local tens = {"", "Dc", "Vg", "Tg", "Qag", "Qig", "Sxg", "Spg", "Ocg", "Nog"}
@@ -83,7 +96,7 @@ end
 ---@param n Big
 ---@param params ExponentialSuffixParams
 ---@return string
-function Notations.ExponentialSuffix(n, params)
+function Notations.Components.ExponentialSuffix(n, params)
     local base_e = math.floor(params.base_e)
 
     local e = math.floor(n.e / base_e) * base_e
@@ -94,29 +107,29 @@ end
 
 ---@param n Big
 ---@return string
-function Notations.LetterNotation(n)
-    return Notations.Mantissa(n, { precision = 2 }) .. Notations.Letters(n, { letters = "~abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" })
+function Notations.Letters(n)
+    return Notations.Components.Mantissa(n, { precision = 2 }) .. Notations.Components.Sequence(n, { sequence = "~abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" })
 end
 
 
 ---@param n Big
 ---@return string
-function Notations.GreekNotation(n)
-    return Notations.Mantissa(n, { precision = 2 }) .. Notations.Letters(n, { letters = "~αβγδεζηθικλμνξοπρστυφχψωΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ" })
+function Notations.Greek(n)
+    return Notations.Mantissa(n, { precision = 2 }) .. Notations.Components.Sequence(n, { sequence = "~αβγδεζηθικλμνξοπρστυφχψωΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ" })
 end
 
 
 ---@param n Big
 ---@return string
-function Notations.HebrewNotation(n)
-    return Notations.Mantissa(n, { precision = 2 }) .. Notations.Letters(n, { letters = "~אבּבגּגדּדהוזחטיכּכךּךלמםנןסעפּפףּףצץקרשׁשׂתּת" })
+function Notations.Hebrew(n)
+    return Notations.Mantissa(n, { precision = 2 }) .. Notations.Components.Sequence(n, { sequence = "~אבּבגּגדּדהוזחטיכּכךּךלמםנןסעפּפףּףצץקרשׁשׂתּת" })
 end
 
 
 ---@param n Big
 ---@return string
-function Notations.CyrillicNotation(n)
-    return Notations.Mantissa(n, { precision = 2 }) .. Notations.Letters(n, { letters = "~абвгдежзиклмнопстуфхцчшщэюяАБВГДЕЖЗИКЛМНОПСТУФХЦЧШЩЭЮЯ" })
+function Notations.Cyrillic(n)
+    return Notations.Mantissa(n, { precision = 2 }) .. Notations.Components.Sequence(n, { sequence = "~абвгдежзиклмнопстуфхцчшщэюяАБВГДЕЖЗИКЛМНОПСТУФХЦЧШЩЭЮЯ" })
 end
 
 
@@ -127,7 +140,7 @@ end
 ---@param n Big
 ---@param params ThousandNotationParams?
 ---@return string
-function Notations.ThousandNotation(n, params)
+function Notations.Thousand(n, params)
     params = params or {}
     local precision = params.precision or 0
 
@@ -153,24 +166,24 @@ end
 
 ---@param n Big
 ---@return string
-function Notations.StandardNotation(n)
-    return Notations.Mantissa(n, { precision = 2 }) .. " " .. Notations.StandardSuffix(n)
+function Notations.Standard(n)
+    return Notations.Components.Mantissa(n, { precision = 2 }) .. " " .. Notations.Components.StandardSuffix(n)
 end
 
 
 ---@param n Big
 ---@return string
-function Notations.ScientificNotation(n)
-    return Notations.Mantissa(n, { precision = 2, base_e = 1 }) ..
-        Notations.ExponentialSuffix(n, { base_e = 1 })
+function Notations.Scientific(n)
+    return Notations.Components.Mantissa(n, { precision = 2, base_e = 1 }) ..
+        Notations.Components.ExponentialSuffix(n, { base_e = 1 })
 end
 
 
 ---@param n Big
 ---@return string
-function Notations.EngineeringNotation(n)
-    return Notations.Mantissa(n, { precision = 2 }) ..
-        Notations.ExponentialSuffix(n, { base_e = 3 })
+function Notations.Engineering(n)
+    return Notations.Components.Mantissa(n, { precision = 2 }) ..
+        Notations.Components.ExponentialSuffix(n, { base_e = 3 })
 end
 
 
