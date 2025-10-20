@@ -197,6 +197,15 @@ end
 ---thousand-separated numbers
 ---@class ThousandNotationParams
 ---@field precision number? Significant digits
+---The separator between groups of digits
+---
+---Default: ","
+---@field separator string?
+---The amount of digits that groups of
+---digits between separators have.
+---
+---Default: 3
+---@field base number?
 
 
 ---Return a number with thousand separators,
@@ -207,6 +216,8 @@ end
 function Notations.Thousand(n, params)
     params = params or {}
     local precision = params.precision or 0
+    local separator = params.separator or ","
+    local base = params.base or 3
 
     local raw = string.format("%." .. precision .. "f", n:to_number())
     local result = ""
@@ -220,8 +231,8 @@ function Notations.Thousand(n, params)
 
     for i = 1, #raw do
         result = result .. string.sub(raw, i, i)
-        if (comma - i) % 3 == 0 and i < comma then
-            result = result .. ","
+        if (comma - i) % base == 0 and i < comma then
+            result = result .. separator
         end
     end
     return result
