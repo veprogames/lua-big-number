@@ -1,10 +1,23 @@
 Notations = { Components = {} }
 
+---Configuration for SequenceByNth and Sequence
 ---@class SequenceParams
+---The Units that will be used. If it is a string,
+---every character is a unit.
 ---@field sequence string|string[]
+---If descending, the higher order units come
+---first. Example: ab, ac, ad, ae, ...
+---
+---If ascending, the lower order units come
+---first. Example: ba, ca, da, ea, ...
 ---@field order "ascending"|"descending"?
 
 
+---Return the Sequence for the `nth` "order"
+---of a notation.
+---
+---For example, in a letter notation, 0 is a,
+---1 is b and so on.
 ---@param nth number
 ---@param params SequenceParams
 ---@return string
@@ -37,6 +50,11 @@ function Notations.Components.SequenceByNth(nth, params)
 end
 
 
+---Return the sequence for a number. This
+---assumes base 1000.
+---
+---For example, in a sequence " abc", 1-999 is "",
+---1,000-999,999 is "a", 1,000,000-999,999,999 is "b" and so on.
 ---@param n Big
 ---@param params SequenceParams
 ---@return string
@@ -46,11 +64,27 @@ function Notations.Components.Sequence(n, params)
 end
 
 
+---Configure the Mantissa
 ---@class MantissaParams
----@field precision number?
+---@field precision number? Significant digits
+---The logarithm of the base. The base describes
+---when the notation enters the next "order",
+---causing the mantissa to divide to 1.
+---
+---The default is 3, which translates to 10 ^ 3 = 1000,
+---a common case for notations.
+---
+---Example:
+---
+---1. 999 K + 2 K = 1,001 K
+---2. Base is 1,000. 1,001 > 1,000
+---3. Divide by 1,000 -> 1.001 M
 ---@field base_e number?
 
 
+---Return the mantissa part of a notation.
+---For example, in 123.45 Million, 123.45
+---is the mantissa.
 ---@param n Big
 ---@param params? MantissaParams
 ---@return string
@@ -68,6 +102,8 @@ function Notations.Components.Mantissa(n, params)
 end
 
 
+---Return a suffix for a standard notation:
+---K, M, B, T, Qa and so on.
 ---@param n Big
 ---@return string
 function Notations.Components.StandardSuffix(n)
@@ -103,10 +139,16 @@ function Notations.Components.StandardSuffix(n)
 end
 
 
+---Configure the exponential suffix `e<x>`,
+---where x is a number
 ---@class ExponentialSuffixParams
+---Snap the exponent to `base_e`. Common values
+---are 1 for scientific or 3 for engineering.
 ---@field base_e number
 
 
+---Return the exponential suffix `e<x>` for `n`,
+---where x is a number
 ---@param n Big
 ---@param params ExponentialSuffixParams
 ---@return string
@@ -119,6 +161,7 @@ function Notations.Components.ExponentialSuffix(n, params)
 end
 
 
+---Letter Notation: a, b, .., z, a~, aa, ab, ..
 ---@param n Big
 ---@return string
 function Notations.Letters(n)
@@ -126,6 +169,7 @@ function Notations.Letters(n)
 end
 
 
+---Letter Notation with the Greek alphabet
 ---@param n Big
 ---@return string
 function Notations.Greek(n)
@@ -133,6 +177,7 @@ function Notations.Greek(n)
 end
 
 
+---Letter Notation with the Hebrew alphabet
 ---@param n Big
 ---@return string
 function Notations.Hebrew(n)
@@ -140,6 +185,7 @@ function Notations.Hebrew(n)
 end
 
 
+---Letter Notation with the Cyrillic alphabet
 ---@param n Big
 ---@return string
 function Notations.Cyrillic(n)
@@ -147,10 +193,14 @@ function Notations.Cyrillic(n)
 end
 
 
+---Configure the notation for
+---thousand-separated numbers
 ---@class ThousandNotationParams
----@field precision number?
+---@field precision number? Significant digits
 
 
+---Return a number with thousand separators,
+---for example 1234567 -> 1,234,567
 ---@param n Big
 ---@param params ThousandNotationParams?
 ---@return string
@@ -178,6 +228,7 @@ function Notations.Thousand(n, params)
 end
 
 
+---Standard Notation: 1.00, 1.00 K, 1.00 M, .., 1.00 QaDc, 1.00 QiDc, ..
 ---@param n Big
 ---@return string
 function Notations.Standard(n)
@@ -185,6 +236,7 @@ function Notations.Standard(n)
 end
 
 
+---Scientific Notation: 1.00e0, 1.00e1, 1.00e2, 1.00e3, 1.00e4, ..
 ---@param n Big
 ---@return string
 function Notations.Scientific(n)
@@ -193,6 +245,7 @@ function Notations.Scientific(n)
 end
 
 
+---Engineering Notation: 1.00e0, 10.00e0, 100.00e0, 1.00e3, 10.00e3, ..
 ---@param n Big
 ---@return string
 function Notations.Engineering(n)
