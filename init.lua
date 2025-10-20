@@ -7,10 +7,7 @@
 ---@operator sub: Big
 ---@operator div: Big
 ---@operator pow: Big
-Big = {
-    m = 0,
-    e = 0
-}
+Big = {}
 
 
 ---Create a new Big number
@@ -20,18 +17,6 @@ Big = {
 ---@param e number?
 ---@return Big
 function Big:new(m, e)
-    self.__index = self
-    self.__add = Big.add
-    self.__sub = Big.sub
-    self.__mul = Big.mul
-    self.__div = Big.div
-    self.__pow = Big.pow
-    self.__unm = Big.negate
-    self.__le = Big.lte
-    self.__lt = Big.lt
-    self.__eq = Big.eq
-    self.__tostring = Big.to_string
-
     if e == nil then e = 0 end
 
     if type(m) == "string" then
@@ -443,6 +428,19 @@ function Big.parse(str)
 
     return Big:new(mantissa, math.floor(exponent)):normalized()
 end
+
+
+Big.__index = Big
+Big.__add = Big.add
+Big.__sub = Big.sub
+Big.__mul = Big.mul
+Big.__div = Big.div
+Big.__pow = Big.pow
+Big.__unm = Big.negate
+Big.__le = Big.lte
+Big.__lt = Big.lt
+Big.__eq = Big.eq
+Big.__tostring = Big.to_string
 
 
 return Big
