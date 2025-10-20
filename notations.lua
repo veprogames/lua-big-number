@@ -165,7 +165,8 @@ end
 ---@param n Big
 ---@return string
 function Notations.Letters(n)
-    return Notations.Components.Mantissa(n, { precision = 2 }) .. Notations.Components.Sequence(n, { sequence = "~abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" })
+    local p = n.e < 3 and 0 or 2
+    return Notations.Components.Mantissa(n, { precision = p }) .. Notations.Components.Sequence(n, { sequence = "~abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" })
 end
 
 
@@ -173,7 +174,8 @@ end
 ---@param n Big
 ---@return string
 function Notations.Greek(n)
-    return Notations.Mantissa(n, { precision = 2 }) .. Notations.Components.Sequence(n, { sequence = "~αβγδεζηθικλμνξοπρστυφχψωΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ" })
+    local p = n.e < 3 and 0 or 2
+    return Notations.Components.Mantissa(n, { precision = p }) .. Notations.Components.Sequence(n, { sequence = "~αβγδεζηθικλμνξοπρστυφχψωΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ" })
 end
 
 
@@ -181,7 +183,8 @@ end
 ---@param n Big
 ---@return string
 function Notations.Hebrew(n)
-    return Notations.Mantissa(n, { precision = 2 }) .. Notations.Components.Sequence(n, { sequence = "~אבּבגּגדּדהוזחטיכּכךּךלמםנןסעפּפףּףצץקרשׁשׂתּת" })
+    local p = n.e < 3 and 0 or 2
+    return Notations.Components.Mantissa(n, { precision = p }) .. Notations.Components.Sequence(n, { sequence = "~אבּבגּגדּדהוזחטיכּכךּךלמםנןסעפּפףּףצץקרשׁשׂתּת" })
 end
 
 
@@ -189,7 +192,8 @@ end
 ---@param n Big
 ---@return string
 function Notations.Cyrillic(n)
-    return Notations.Mantissa(n, { precision = 2 }) .. Notations.Components.Sequence(n, { sequence = "~абвгдежзиклмнопстуфхцчшщэюяАБВГДЕЖЗИКЛМНОПСТУФХЦЧШЩЭЮЯ" })
+    local p = n.e < 3 and 0 or 2
+    return Notations.Components.Mantissa(n, { precision = p }) .. Notations.Components.Sequence(n, { sequence = "~абвгдежзиклмнопстуфхцчшщэюяАБВГДЕЖЗИКЛМНОПСТУФХЦЧШЩЭЮЯ" })
 end
 
 
@@ -243,7 +247,8 @@ end
 ---@param n Big
 ---@return string
 function Notations.Standard(n)
-    return Notations.Components.Mantissa(n, { precision = 2 }) .. " " .. Notations.Components.StandardSuffix(n)
+    local p = n.e < 3 and 0 or 2
+    return Notations.Components.Mantissa(n, { precision = p }) .. " " .. Notations.Components.StandardSuffix(n)
 end
 
 
