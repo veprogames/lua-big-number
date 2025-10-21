@@ -94,7 +94,7 @@ function Notations.Components.Mantissa(n, params)
     local precision = params.precision or 0
 
     if n.m < 0 then
-        return "-" .. Notations.Mantissa(-n, params)
+        return "-" .. Notations.Components.Mantissa(-n, params)
     end
 
     local value = n.m * 10 ^ (n.e % base_e)
