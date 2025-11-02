@@ -11,6 +11,13 @@ Notations = { Components = {} }
 ---If ascending, the lower order units come
 ---first. Example: ba, ca, da, ea, ...
 ---@field order "ascending"|"descending"?
+---A representation for numbers below 1
+---is needed. This is done by inversing
+---the exponent (* -1) and prepending
+---a character `negative_sign`
+---
+---Default: "/"
+---@field negative_sign string?
 
 
 ---Return the Sequence for the `nth` "order"
@@ -26,6 +33,13 @@ function Notations.Components.SequenceByNth(nth, params)
     local order = params.order or "descending"
 
     local result = ""
+
+    local is_negative = nth < 0
+
+    if is_negative then
+        nth = nth * -1
+    end
+
     while nth > 0 do
         local str_index = 1 + nth % #sequence
 
@@ -46,7 +60,11 @@ function Notations.Components.SequenceByNth(nth, params)
 
         nth = math.floor(nth / #sequence)
     end
-    return result
+
+    local negative_sign = params.negative_sign or "/"
+    negative_sign = is_negative and negative_sign or ""
+
+    return negative_sign .. result
 end
 
 
@@ -102,11 +120,24 @@ function Notations.Components.Mantissa(n, params)
 end
 
 
+---@class StandardSuffixParams
+---A representation for numbers below 1
+---is needed. This is done by inversing
+---the exponent (* -1) and prepending
+---a character `negative_sign`
+---
+---Default: "/"
+---@field negative_sign string?
+
+
 ---Return a suffix for a standard notation:
 ---K, M, B, T, Qa and so on.
 ---@param n Big
+---@param params StandardSuffixParams?
 ---@return string
-function Notations.Components.StandardSuffix(n)
+function Notations.Components.StandardSuffix(n, params)
+    params = params or {}
+
     local start = {"", "K", "M", "B", "T"}
     local ones = {"", "U", "D", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No"}
     local tens = {"", "Dc", "Vg", "Tg", "Qag", "Qig", "Sxg", "Spg", "Ocg", "Nog"}
@@ -115,9 +146,16 @@ function Notations.Components.StandardSuffix(n)
     local e = n.e
 
     local order = math.floor(e / 3)
+    local is_negative = order < 0
+
+    if is_negative then
+        order = order * -1
+    end
+    local negative_sign = params.negative_sign or "/"
+    negative_sign = is_negative and negative_sign or ""
 
     if order < #start then
-        return start[1 + order]
+        return negative_sign .. start[1 + order]
     end
 
     order = order - 1
@@ -132,7 +170,7 @@ function Notations.Components.StandardSuffix(n)
         thousand_string = "MI-"
     end
 
-    return thousand_string ..
+    return negative_sign .. thousand_string ..
         hundreds[1 + order_hundred % #hundreds] ..
         ones[1 + order % #ones] ..
         tens[1 + order_ten % #tens]
@@ -165,8 +203,10 @@ end
 ---@param n Big
 ---@return string
 function Notations.Letters(n)
-    local p = n.e < 3 and 0 or 2
-    return Notations.Components.Mantissa(n, { precision = p }) .. Notations.Components.Sequence(n, { sequence = "~abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" })
+    if n.e < 3 then
+        return Notations.Thousand(n, { precision = 0 })
+    end
+    return Notations.Components.Mantissa(n, { precision = 2 }) .. Notations.Components.Sequence(n, { sequence = "~abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" })
 end
 
 
@@ -174,8 +214,10 @@ end
 ---@param n Big
 ---@return string
 function Notations.Greek(n)
-    local p = n.e < 3 and 0 or 2
-    return Notations.Components.Mantissa(n, { precision = p }) .. Notations.Components.Sequence(n, { sequence = "~αβγδεζηθικλμνξοπρστυφχψωΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ" })
+    if n.e < 3 then
+        return Notations.Thousand(n, { precision = 0 })
+    end
+    return Notations.Components.Mantissa(n, { precision = 2 }) .. Notations.Components.Sequence(n, { sequence = "~αβγδεζηθικλμνξοπρστυφχψωΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ" })
 end
 
 
@@ -183,8 +225,10 @@ end
 ---@param n Big
 ---@return string
 function Notations.Hebrew(n)
-    local p = n.e < 3 and 0 or 2
-    return Notations.Components.Mantissa(n, { precision = p }) .. Notations.Components.Sequence(n, { sequence = "~אבּבגּגדּדהוזחטיכּכךּךלמםנןסעפּפףּףצץקרשׁשׂתּת" })
+    if n.e < 3 then
+        return Notations.Thousand(n, { precision = 0 })
+    end
+    return Notations.Components.Mantissa(n, { precision = 2 }) .. Notations.Components.Sequence(n, { sequence = "~אבּבגּגדּדהוזחטיכּכךּךלמםנןסעפּפףּףצץקרשׁשׂתּת" })
 end
 
 
@@ -192,8 +236,10 @@ end
 ---@param n Big
 ---@return string
 function Notations.Cyrillic(n)
-    local p = n.e < 3 and 0 or 2
-    return Notations.Components.Mantissa(n, { precision = p }) .. Notations.Components.Sequence(n, { sequence = "~абвгдежзиклмнопстуфхцчшщэюяАБВГДЕЖЗИКЛМНОПСТУФХЦЧШЩЭЮЯ" })
+    if n.e < 3 then
+        return Notations.Thousand(n, { precision = 0 })
+    end
+    return Notations.Components.Mantissa(n, { precision = 2 }) .. Notations.Components.Sequence(n, { sequence = "~абвгдежзиклмнопстуфхцчшщэюяАБВГДЕЖЗИКЛМНОПСТУФХЦЧШЩЭЮЯ" })
 end
 
 
@@ -247,8 +293,10 @@ end
 ---@param n Big
 ---@return string
 function Notations.Standard(n)
-    local p = n.e < 3 and 0 or 2
-    return Notations.Components.Mantissa(n, { precision = p }) .. " " .. Notations.Components.StandardSuffix(n)
+    if n.e < 3 then
+        return Notations.Thousand(n, { precision = 0 })
+    end
+    return Notations.Components.Mantissa(n, { precision = 2 }) .. " " .. Notations.Components.StandardSuffix(n)
 end
 
 
